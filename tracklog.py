@@ -30,6 +30,9 @@ def get_acoustic_position(base_url):
 def get_global_position(base_url):
     return get_data("{}/api/v1/position/global".format(base_url))
 
+def get_master_position(base_url):
+    return get_data("{}/api/v1/position/master".format(base_url))
+
 
 def main():
     parser = argparse.ArgumentParser(description="Push depth to Underwater GPS")
@@ -49,8 +52,11 @@ def main():
     gpx.tracks.append(gpx_track)
 
     # Create segment
-    gpx_segment = gpxpy.gpx.GPXTrackSegment()
-    gpx_track.segments.append(gpx_segment)
+    gpx_segment_master = gpxpy.gpx.GPXTrackSegment()
+    gpx_segment_global = gpxpy.gpx.GPXTrackSegment()
+
+    gpx_track.segments.append(gpx_segment_master)
+    gpx_track.segments.append(gpx_segment_global)
 
     # Open file for writing so we don't get an access denied error
     # after a full log session is completed
@@ -58,13 +64,21 @@ def main():
 
     try:
         while True:
-            pos = get_global_position(base_url)
-            if not pos:
+            pos_global = get_global_position(base_url)
+            if not pos_global:
                 log.warning("Got no global position")
                 continue
 
-            lat = pos["lat"]
-            lon = pos["lon"]
+            lat_global = pos_global["lat"]
+            lon_global = pos_global["lon"]
+
+            pos_master = get_master_position(base_url)
+            if not pos_master:
+                log.warning("Got no master position")
+                continue
+
+            lat_master = pos_master["lat"]
+            lon_master = pos_master["lon"]
 
             acoustic = get_acoustic_position(base_url)
             if not acoustic:
@@ -74,8 +88,11 @@ def main():
             depth = acoustic["z"]
             altitude = -depth
 
-            log.info("Lat: {} Lon: {} Alt: {}".format(lat, lon, altitude))
-            gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(lat, lon, elevation=-altitude))
+            log.info("Global: Lat: {} Lon: {} Alt: {}".format(lat_global, lon_global, altitude))
+            gpx_segment_global.points.append(gpxpy.gpx.GPXTrackPoint(lat_global, lon_global, elevation=-altitude))
+
+            log.info("Master: Lat: {} Lon: {}".format(lat_master, lon_master))
+            gpx_segment_master.points.append(gpxpy.gpx.GPXTrackPoint(lat_master, lon_master))
 
             time.sleep(1)
 
