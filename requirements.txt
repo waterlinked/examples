@@ -1,2 +1,4 @@
 requests
 gpxpy
+pynmea2
+pyserial

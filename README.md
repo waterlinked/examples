@@ -15,6 +15,10 @@ Example of how to get both global (lat/lon) and relative position (x,y,z) from t
 Example of how to send external depth data to the Waterlinked Underwater GPS. This is needed when
 using the Locator A1 and is typically part of ROV integration
 
+### About externalNMEA.py
+
+Example of how to send external position data to the Waterlinked Underwater GPS. It reads NMEA messages from a device and parses it before sending it to the master electronics. 
+
 ### About tracklog.py
 
 Example of how to store positions into a tracklog while the system is running into a [GPX file](https://en.wikipedia.org/wiki/GPS_Exchange_Format) for later viewing or processing.
@@ -29,6 +33,6 @@ Example of how to store positions into a tracklog while the system is running in
 Install the required Python packages
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
