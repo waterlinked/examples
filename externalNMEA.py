@@ -27,7 +27,7 @@ def main():
     baseurl = args.url
     log.info("Using baseurl: %s source: %s", args.url, args.source)
 
-    reader = pynmea2.NMEAStremReader()
+    reader = pynmea2.NMEAStreamReader()
     com  = args.source
 
     try:
