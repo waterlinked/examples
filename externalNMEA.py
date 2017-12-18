@@ -20,7 +20,7 @@ def set_position_master(url, latitude, longitude, orientation):
         
 def main():
     parser = argparse.ArgumentParser(description="Push position and orientation of master to Underwater GPS")
-    parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://37.139.8.112:8000')
+    parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
     parser.add_argument('-d', '--source', help='Device to read nmea strings from', type=str, default='/dev/ttyUSB0')
     args = parser.parse_args()
 

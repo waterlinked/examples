@@ -17,7 +17,7 @@ def set_depth(url, depth, temp):
 
 def main():
     parser = argparse.ArgumentParser(description="Push depth to Underwater GPS")
-    parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://37.139.8.112:8000')
+    parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
     parser.add_argument('-d', '--depth', help='Depth to send', type=float, default=0.5)
     parser.add_argument('-t', '--temp', help='Temperature to send', type=float, default=10)
     parser.add_argument('-r', '--repeat', help='Repeat sending with a delay of the given number of seconds', type=int, default=0)

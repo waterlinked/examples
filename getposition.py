@@ -1,5 +1,6 @@
 from __future__ import print_function
 import requests
+import argparse
 import json
 
 
@@ -25,7 +26,12 @@ def get_global_position(base_url):
 
 
 def main():
-    base_url = "http://37.139.8.112:8000"
+    parser = argparse.ArgumentParser(description="Push position and orientation of master to Underwater GPS")
+    parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
+    args = parser.parse_args()
+
+    base_url = args.url
+    print("Using base_url: %s", args.url)
 
     data = get_acoustic_position(base_url)
     if data:
