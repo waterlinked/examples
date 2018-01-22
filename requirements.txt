@@ -1,4 +1,4 @@
-requests
-gpxpy
-pynmea2
-pyserial
+requests>=2.18.4
+gpxpy>=1.1.2
+pynmea2>=1.12.0
+pyserial>=3.4
