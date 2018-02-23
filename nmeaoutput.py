@@ -52,9 +52,8 @@ def gen_gga(time_t, lat, lat_pole, lng, lng_pole, fix_quality, num_sats, hdop, a
 
     return '$%s*%0.2X' % (result, crc)
 
-def send_udp(ip, port, message):
-    sock = socket.socket(socket.AF_INET, # Internet
-             socket.SOCK_DGRAM) # UDP
+
+def send_udp(sock, ip, port, message):
     sock.sendto(message, (ip, port))
 
 def main():
@@ -81,14 +80,19 @@ def main():
     ser = None
     if args.serial:
         ser = serial.Serial(args.serial, args.baud)
+
+    sock = None
+    if args.ip:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
     while True:
         pos = get_global_position(base_url)
         if pos:
             #print("Current global position lat:{} lon:{}".format(pos["lat"], pos["lon"]))
             sentence = gen_gga(time.gmtime(), pos["lat"], 'N', pos["lon"], 'E', 0, 0, 0, 0, 0)
             print(sentence)
-            if args.ip:
-                send_udp(args.ip, args.port, sentence)
+            if sock:
+                send_udp(sock, args.ip, args.port, sentence)
             if ser:
                 ser.wrote(sentence + "\n")
             time.sleep(0.2)
