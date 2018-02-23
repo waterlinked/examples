@@ -6,6 +6,10 @@ Example applications using the Waterlinked Underwater GPS API. See http://waterl
 The example applications are set up to use the Waterlinked Demo Server by default and should be changed
 to the IP address/port of your kit. (For example: http://192.168.2.94)
 
+### About nmeaoutput.py
+
+Generate NMEA sentence from the global (lat, lon) and output it to either UDP or Serial port
+
 ### About getposition.py
 
 Example of how to get both global (lat/lon) and relative position (x,y,z) from the Waterlinked Underwater GPS.
