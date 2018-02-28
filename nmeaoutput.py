@@ -24,7 +24,7 @@ def get_data(url):
 def get_global_position(base_url):
     return get_data("{}/api/v1/position/global".format(base_url))
 
-def gen_gga(time_t, lat, lat_pole, lng, lng_pole, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m, dgps_age_sec=None, dgps_ref_id=None):
+def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m, dgps_age_sec=None, dgps_ref_id=None):
     # Code is adapted from https://gist.github.com/JoshuaGross/d39fd69b1c17926a44464cb25b0f9828
     hhmmssss = '%02d%02d%02d%s' % (time_t.tm_hour, time_t.tm_min, time_t.tm_sec, '.%02d' if 0 != 0 else '')
 
@@ -32,14 +32,14 @@ def gen_gga(time_t, lat, lat_pole, lng, lng_pole, fix_quality, num_sats, hdop, a
     lat_deg = lat_abs
     lat_min = (lat_abs - floor(lat_deg)) * 60
     lat_sec = round((lat_min - floor(lat_min)) * 1000)
-    lat_pole_prime = ('S' if lat_pole == 'N' else 'N') if lat < 0 else lat_pole
+    lat_pole_prime = 'S' if lat < 0 else 'N'
     lat_format = '%02d%02d.%03d' % (lat_deg, lat_min, lat_sec)
 
     lng_abs = abs(lng)
     lng_deg = lng_abs
     lng_min = (lng_abs - floor(lng_deg)) * 60
     lng_sec = round((lng_min - floor(lng_min)) * 1000)
-    lng_pole_prime = ('W' if lng_pole == 'E' else 'E') if lng < 0 else lng_pole
+    lng_pole_prime = 'W' if lng < 0 else 'E'
     lng_format = '%03d%02d.%03d' % (lng_deg, lng_min, lng_sec)
 
     dgps_format = '%s,%s' % ('%.1f' % dgps_age_sec if dgps_age_sec is not None else '', '%04d' % dgps_ref_id if dgps_ref_id is not None else '')
@@ -89,7 +89,7 @@ def main():
         pos = get_global_position(base_url)
         if pos:
             #print("Current global position lat:{} lon:{}".format(pos["lat"], pos["lon"]))
-            sentence = gen_gga(time.gmtime(), pos["lat"], 'N', pos["lon"], 'E', 0, 0, 0, 0, 0)
+            sentence = gen_gga(time.gmtime(), pos["lat"], pos["lon"], 0, 0, 0, 0, 0)
             print(sentence)
             if sock:
                 send_udp(sock, args.ip, args.port, sentence)
