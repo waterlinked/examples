@@ -58,10 +58,12 @@ def send_udp(sock, ip, port, message):
 
 def main():
     parser = argparse.ArgumentParser(description="Read position from Underwater GPS and send NMEA to serial or UDP")
-    parser.add_argument('-u', '--url', help='Base URL to use. Typically http://192.168.2.94', type=str, default='http://demo.waterlinked.com')
-    parser.add_argument('-i', '--ip', help="IP address to send UDP packets. Default disabled", type=str, default='')
+    parser.add_argument('-u', '--url', help='IP/URL of Underwater GPS kit. Typically http://192.168.2.94', type=str, default='http://demo.waterlinked.com')
+    # UDP options
+    parser.add_argument('-i', '--ip', help="Enable UDP output by specifying IP address to send UDP packets. Default disabled", type=str, default='')
     parser.add_argument('-p', '--port', help="Port to send UDP packet", type=int, default=5000)
-    parser.add_argument('-s', '--serial', help="Serial port to use. Example: /dev/ttyUSB0/COM1 Default disabled", type=str, default='')
+    # Serial port options
+    parser.add_argument('-s', '--serial', help="Enable serial port output by specifying port to use. Example: '/dev/ttyUSB0' or 'COM1' Default disabled", type=str, default='')
     parser.add_argument('-b', '--baud', help="Serial port baud rate", type=int, default=9600)
     args = parser.parse_args()
 
@@ -70,7 +72,6 @@ def main():
         print("ERROR: Please specify either serial port to use or ip address to use")
         sys.exit(1)
 
-    base_url = args.url
     print("Using base_url: {}. Serial {}. UDP: {} {}".format(
         args.url,
         args.serial or "disabled",
@@ -86,7 +87,7 @@ def main():
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     while True:
-        pos = get_global_position(base_url)
+        pos = get_global_position(args.url)
         if pos:
             #print("Current global position lat:{} lon:{}".format(pos["lat"], pos["lon"]))
             sentence = gen_gga(time.gmtime(), pos["lat"], pos["lon"], 0, 0, 0, 0, 0)

@@ -8,7 +8,12 @@ to the IP address/port of your kit. (For example: http://192.168.2.94)
 
 ### About nmeaoutput.py
 
-Generate NMEA sentence from the global (lat, lon) and output it to either UDP or Serial port
+Generate NMEA sentences (GGA) from the global/locator position (lat, lon) and output it to either UDP or Serial port.
+
+### About nmeainput.py
+
+Parse NMEA sentences (GGA/HDT) from either UDP or Serial and send to Underwater GPS kit to use as global reference system instead of the on-board
+GPS and IMU. The Underwater GPS kit must be configured to use "External" GPS / Compass.
 
 ### About getposition.py
 
@@ -18,10 +23,6 @@ Example of how to get both global (lat/lon) and relative position (x,y,z) from t
 
 Example of how to send external depth data to the Waterlinked Underwater GPS. This is needed when
 using the Locator A1 and is typically part of ROV integration
-
-### About externalNMEA.py
-
-Example of how to send external position data to the Waterlinked Underwater GPS. It reads NMEA messages from a device and parses it before sending it to the master electronics. 
 
 ### About tracklog.py
 
