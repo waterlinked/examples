@@ -1,3 +1,6 @@
+"""
+Get position from Water Linked Underwater GPS
+"""
 from __future__ import print_function
 import requests
 import argparse
@@ -26,7 +29,7 @@ def get_global_position(base_url):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Push position and orientation of master to Underwater GPS")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
     args = parser.parse_args()
 

@@ -1,3 +1,6 @@
+"""
+Push depth to Water Linked Underwater GPS
+"""
 from __future__ import print_function
 import requests
 import argparse
@@ -16,7 +19,7 @@ def set_depth(url, depth, temp):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Push depth to Underwater GPS")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
     parser.add_argument('-d', '--depth', help='Depth to send', type=float, default=0.5)
     parser.add_argument('-t', '--temp', help='Temperature to send', type=float, default=10)

@@ -1,3 +1,7 @@
+"""
+Read position from Water Linked Underwater GPS convert to NMEA and send to serial
+port or on UDP socket
+"""
 from __future__ import print_function
 import requests
 import argparse
@@ -57,7 +61,7 @@ def send_udp(sock, ip, port, message):
     sock.sendto(message, (ip, port))
 
 def main():
-    parser = argparse.ArgumentParser(description="Read position from Underwater GPS and send NMEA to serial or UDP")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='IP/URL of Underwater GPS kit. Typically http://192.168.2.94', type=str, default='http://demo.waterlinked.com')
     # UDP options
     parser.add_argument('-i', '--ip', help="Enable UDP output by specifying IP address to send UDP packets. Default disabled", type=str, default='')

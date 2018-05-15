@@ -1,3 +1,6 @@
+"""
+Read NMEA from UDP or serial and send position and orientation to Water Linked Underwater GPS
+"""
 from __future__ import print_function
 import requests
 import argparse
@@ -84,7 +87,7 @@ def run(base_url, conn):
             gotUpdate = False
 
 def main():
-    parser = argparse.ArgumentParser(description="Read NMEA from UDP or serial and send position and orientation to Underwater GPS")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='IP/URL of Underwater GPS kit. Typically http://192.168.2.94', type=str, default='http://demo.waterlinked.com')
     # UDP options
     parser.add_argument('-p', '--port', help="Port to listen for UDP packets", type=int, default=10110)

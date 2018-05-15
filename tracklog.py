@@ -1,3 +1,6 @@
+"""
+Create tracklog from Water Linked Underwater GPS
+"""
 from __future__ import print_function
 import requests
 import argparse
@@ -35,7 +38,7 @@ def get_master_position(base_url):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Push depth to Underwater GPS")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
     parser.add_argument('-o', '--output', help='Output filename', type=str, default='tracklog.gpx')
 
