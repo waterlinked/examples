@@ -1,9 +1,9 @@
-# Waterlinked API examples
+# Water Linked Underwater GPS API examples
 
 ## About
 
-Example applications using the Waterlinked Underwater GPS API. See http://waterlinked.com for more details.
-The example applications are set up to use the Waterlinked Demo Server by default and should be changed
+Example applications using the Water Linked Underwater GPS API. See http://waterlinked.com for more details.
+The example applications are set up to use the Water Linked Demo Server by default and should be changed
 to the IP address/port of your kit. (For example: http://192.168.2.94)
 
 ### About nmeaoutput.py
@@ -17,11 +17,11 @@ GPS and IMU. The Underwater GPS kit must be configured to use "External" GPS / C
 
 ### About getposition.py
 
-Example of how to get both global (lat/lon) and relative position (x,y,z) from the Waterlinked Underwater GPS.
+Example of how to get both global (lat/lon) and relative position (x,y,z) from the Water Linked Underwater GPS.
 
 ### About externaldepth.py
 
-Example of how to send external depth data to the Waterlinked Underwater GPS. This is needed when
+Example of how to send external depth data to the Water Linked Underwater GPS. This is needed when
 using the Locator A1 and is typically part of ROV integration
 
 ### About tracklog.py
