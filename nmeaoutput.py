@@ -99,7 +99,7 @@ def main():
             if sock:
                 send_udp(sock, args.ip, args.port, sentence)
             if ser:
-                ser.wrote(sentence + "\n")
+                ser.write(sentence + "\n")
             time.sleep(0.2)
 
 
