@@ -6,6 +6,7 @@ import requests
 import argparse
 import time
 import logging
+import datetime
 import gpxpy
 import gpxpy.gpx
 
@@ -92,10 +93,10 @@ def main():
             altitude = -depth
 
             log.info("Global: Lat: {} Lon: {} Alt: {}".format(lat_global, lon_global, altitude))
-            gpx_segment_global.points.append(gpxpy.gpx.GPXTrackPoint(lat_global, lon_global, elevation=-altitude))
+            gpx_segment_global.points.append(gpxpy.gpx.GPXTrackPoint(lat_global, lon_global, elevation=-altitude, time=datetime.datetime.utcnow()))
 
             log.info("Master: Lat: {} Lon: {}".format(lat_master, lon_master))
-            gpx_segment_master.points.append(gpxpy.gpx.GPXTrackPoint(lat_master, lon_master))
+            gpx_segment_master.points.append(gpxpy.gpx.GPXTrackPoint(lat_master, lon_master, time=datetime.datetime.utcnow()))
 
             time.sleep(1)
 
