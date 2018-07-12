@@ -1,5 +1,18 @@
 # Water Linked Underwater GPS API examples
 
+## Requirements
+
+* Python 2.7 (http://python.org)
+* pip (https://pip.pypa.io/en/stable/installing/)
+
+## Installation
+
+Install the required Python packages
+
+```
+pip install -r requirements.txt
+```
+
 ## About
 
 Example applications using the Water Linked Underwater GPS API. See http://waterlinked.com for more details.
@@ -27,17 +40,3 @@ using the Locator A1 and is typically part of ROV integration
 ### About tracklog.py
 
 Example of how to store positions into a tracklog while the system is running into a [GPX file](https://en.wikipedia.org/wiki/GPS_Exchange_Format) for later viewing or processing.
-
-## Requirements
-
-* Python 2.7 (http://python.org)
-* pip (https://pip.pypa.io/en/stable/installing/)
-
-## Installation
-
-Install the required Python packages
-
-```
-pip install -r requirements.txt
-```
-
