@@ -53,9 +53,11 @@ class UDPReader(object):
 
 def set_position_master(url, latitude, longitude, orientation):
     payload = dict(lat=latitude, lon=longitude, orientation=orientation)
-    r = requests.put(url, json=payload, timeout=10)
-    if r.status_code != 200:
-        log.error("Error setting position and orientation: {} {}".format(r.status_code, r.text))
+    #Keep loop running even if for some reason there is no connection.
+    try:
+        requests.put(url, json=payload, timeout=1)
+    except  requests.exceptions.RequestException as err:
+        print("Serial connection error: {}".format(err))
 
 
 def run(base_url, conn):
@@ -67,6 +69,11 @@ def run(base_url, conn):
     reader = pynmea2.NMEAStreamReader()
 
     for data in conn.iter():
+        #In case the format is given in bytes
+        try:
+            data = data.decode('UTF-8')
+        except AttributeError:
+            pass
         try:
           for msg in reader.next(data):
             if type(msg) == pynmea2.types.talker.GGA:
