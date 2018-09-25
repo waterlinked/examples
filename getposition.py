@@ -34,7 +34,7 @@ def main():
     args = parser.parse_args()
 
     base_url = args.url
-    print("Using base_url: %s", args.url)
+    print("Using base_url: %s" % args.url)
 
     data = get_acoustic_position(base_url)
     if data:
