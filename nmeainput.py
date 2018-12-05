@@ -89,7 +89,7 @@ def run(base_url, conn):
             log.warning("Error while parsing NMEA string: {}".format(e))
 
         if gotUpdate:
-            log.info('Sending position and orientation')
+            log.info('Sending position {} {} and orientation: {}'.format(lat, lon, orientation))
             set_position_master('{}/api/v1/external/master'.format(base_url), lat, lon, orientation)
             gotUpdate = False
 
