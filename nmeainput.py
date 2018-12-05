@@ -77,12 +77,12 @@ def run(base_url, conn):
         try:
           for msg in reader.next(data):
             if type(msg) == pynmea2.types.talker.GGA:
-                lat = msg.latitude
-                lon = msg.longitude
+                lat = float(msg.latitude)
+                lon = float(msg.longitude)
                 gotUpdate = True
 
             elif type(msg) == pynmea2.types.talker.HDT:
-                orientation = msg.heading
+                orientation = float(msg.heading)
                 gotUpdate = True
 
         except pynmea2.ParseError as e:
