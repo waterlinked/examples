@@ -60,7 +60,7 @@ def set_position_master(url, latitude, longitude, orientation):
         print("Serial connection error: {}".format(err))
 
 
-def run(base_url, conn):
+def run(base_url, conn, compass_src):
     lat = 0
     lon = 0
     orientation = 0
@@ -81,7 +81,15 @@ def run(base_url, conn):
                 lon = float(msg.longitude)
                 gotUpdate = True
 
-            elif type(msg) == pynmea2.types.talker.HDT:
+            elif type(msg) == pynmea2.types.talker.HDT and compass_src == "hdt":
+                orientation = float(msg.heading)
+                gotUpdate = True
+
+            elif type(msg) == pynmea2.types.talker.HDG and compass_src == "hdg":
+                orientation = float(msg.heading)
+                gotUpdate = True
+
+            elif type(msg) == pynmea2.types.talker.HDM and compass_src == "hdm":
                 orientation = float(msg.heading)
                 gotUpdate = True
 
@@ -94,10 +102,14 @@ def run(base_url, conn):
             gotUpdate = False
 
 def main():
+    valid_compass = ["hdt", "hdg", "hdm", "any"]
+    valid_compass_str = ', '.join(valid_compass)
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='IP/URL of Underwater GPS kit. Typically http://192.168.2.94', type=str, default='http://demo.waterlinked.com')
+    parser.add_argument('-c', '--compass', help='NMEA type to use as orientation source. Valid options: {}'.format(valid_compass_str), type=str, default='hdt')
     # UDP options
-    parser.add_argument('-p', '--port', help="Port to listen for UDP packets", type=int, default=10110)
+    parser.add_argument('-p', '--port', help="Port to listen for UDP packets. Default: 10110", type=int, default=10110)
     parser.add_argument('-i', '--ip', help="Enable UDP by specifying interface to listen for UDP packets. Typically 'localhost' or '0.0.0.0'. Default disabled", type=str, default='')
     # Serial options
     parser.add_argument('-s', '--serial', help="Enable Serial by specifying serial port to use. Example: '/dev/ttyUSB0' or 'COM1' Default disabled", type=str, default='')
@@ -115,6 +127,14 @@ def main():
         parser.print_help()
         print("")
         print("ERROR: Please specify either serial port or UDP port to use")
+        print("")
+        sys.exit(1)
+
+    args.compass = args.compass.lower()
+    valid_compass = ["hdt", "hdg", "hdm"]
+    if args.compass not in valid_compass:
+        print("")
+        print("ERROR: Please --compass as one of {}".format(valid_compass_str))
         print("")
         sys.exit(1)
 
@@ -138,7 +158,7 @@ def main():
             print("Aborting")
             sys.exit(1)
 
-        run(args.url, reader)
+        run(args.url, reader, args.compass)
         return
 
 if __name__ == "__main__":
