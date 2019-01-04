@@ -9,7 +9,6 @@ import json
 import time
 from math import floor
 import socket
-import serial
 import sys
 import subprocess
 import os
@@ -127,6 +126,7 @@ def main():
 
     ser = None
     if args.serial:
+        import serial
         print("Serial port: {}".format(args.serial))
         ser = serial.Serial(args.serial, args.baud)
 
