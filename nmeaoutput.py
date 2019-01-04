@@ -40,6 +40,15 @@ def get_master_position(base_url):
     return get_data("{}/api/v1/position/master".format(base_url))
 
 
+def checksum(sentence):
+    """Calculate and return checsum for given NMEA sentence"""
+    crc = 0
+    for c in sentence:
+        crc = crc ^ ord(c)
+    crc = crc & 0xFF
+    return crc
+
+
 def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m, dgps_age_sec=None, dgps_ref_id=None):
     # Code is adapted from https://gist.github.com/JoshuaGross/d39fd69b1c17926a44464cb25b0f9828
     hhmmssss = '%02d%02d%02d%s' % (time_t.tm_hour, time_t.tm_min, time_t.tm_sec, '.%02d' if 0 != 0 else '')
@@ -61,10 +70,7 @@ def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m,
     dgps_format = '%s,%s' % ('%.1f' % dgps_age_sec if dgps_age_sec is not None else '', '%04d' % dgps_ref_id if dgps_ref_id is not None else '')
 
     result = 'GPGGA,%s,%s,%s,%s,%s,%d,%02d,%.1f,%.1f,M,%.1f,M,%s' % (hhmmssss, lat_format, lat_pole_prime, lng_format, lng_pole_prime, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m, dgps_format)
-    crc = 0
-    for c in result:
-        crc = crc ^ ord(c)
-    crc = crc & 0xFF
+    crc = checksum(result)
 
     return '$%s*%0.2X' % (result, crc)
 
