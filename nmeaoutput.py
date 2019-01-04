@@ -13,6 +13,8 @@ import serial
 import sys
 import subprocess
 import os
+import signal
+
 
 def get_data(url, stderr=False):
     try:
@@ -29,11 +31,14 @@ def get_data(url, stderr=False):
 
     return r.json()
 
+
 def get_global_position(base_url):
     return get_data("{}/api/v1/position/global".format(base_url))
 
+
 def get_master_position(base_url):
     return get_data("{}/api/v1/position/master".format(base_url))
+
 
 def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m, dgps_age_sec=None, dgps_ref_id=None):
     # Code is adapted from https://gist.github.com/JoshuaGross/d39fd69b1c17926a44464cb25b0f9828
@@ -63,16 +68,20 @@ def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m,
 
     return '$%s*%0.2X' % (result, crc)
 
+
 def send_udp(sock, ip, port, message):
     sock.sendto(message, (ip, port))
 
-#Create a virtual port in the computer. Valid for linux with socat installed.
+
 class VirtualPort:
+    """
+    Create a virtual port in the computer. Valid for linux with socat installed.
+    """
     def __init__(self, password, origin='/dev/ttyS8', end='/dev/ttyS9'):
         self.origin = origin
         self.end=end
         self.p = subprocess.Popen(['/bin/bash', '-c', 'echo %s|sudo -S sudo socat PTY,link=%s PTY,link=%s' % (password, self.origin, self.end)], preexec_fn=os.setpgrp)
-        time.sleep(1) #Wait for process to start
+        time.sleep(1)  # Wait for process to start
         subprocess.call(['/bin/bash', '-c', 'echo %s|sudo -S sudo chmod 666 %s' % (password, self.origin)])
         subprocess.call(['/bin/bash', '-c', 'echo %s|sudo -S sudo chmod 666 %s' % (password, self.end)])
         return
@@ -97,7 +106,7 @@ def main():
     # Serial port options
     parser.add_argument('-s', '--serial', help="Enable serial port output by specifying port to use. Example: '/dev/ttyUSB0' or 'COM1' Default disabled", type=str, default='')
     parser.add_argument('-b', '--baud', help="Serial port baud rate", type=int, default=9600)
-    #Virtual port options
+    # Virtual port options
     parser.add_argument('-w', '--password', help='Password to execute sudo commands', type=str, default='')
     parser.add_argument('-o', '--origin', help='Virtual port to write in', type=str, default='/dev/ttyS7')
     parser.add_argument('-e', '--end', help='Virtual port where to read from', type=str, default='/dev/ttyS9')
