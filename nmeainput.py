@@ -147,7 +147,7 @@ def main():
             print("Aborting")
             sys.exit(1)
 
-        run(args.url, ser)
+        run(args.url, ser, args.compass)
         return
 
     if args.ip:
