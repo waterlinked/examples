@@ -28,6 +28,8 @@ Generate NMEA sentences (GGA) from the global/locator position (lat, lon) and ou
 Parse NMEA sentences (GGA/HDT) from either UDP or Serial and send to Underwater GPS kit to use as global reference system instead of the on-board
 GPS and IMU. The Underwater GPS kit must be configured to use "External" GPS / Compass.
 
+NOTE: If you just want NMEA input/output with easier installation take a look at: https://github.com/waterlinked/ugps-nmea-go
+
 ### About getposition.py
 
 Example of how to get both global (lat/lon) and relative position (x,y,z) from the Water Linked Underwater GPS.
