@@ -1,7 +1,7 @@
 """
 Read position from Water Linked Underwater GPS convert to use in Olex chart plotter
 """
-from __future__ import print_function
+
 from nmeaoutput import get_data, checksum, send_udp, get_master_position
 import requests
 import argparse

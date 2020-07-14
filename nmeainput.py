@@ -1,7 +1,7 @@
 """
 Read NMEA from UDP or serial and send position and orientation to Water Linked Underwater GPS
 """
-from __future__ import print_function
+
 import requests
 import argparse
 import time

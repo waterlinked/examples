@@ -2,7 +2,7 @@
 Read position from Water Linked Underwater GPS convert to NMEA and send to serial
 port, on UDP socket or a virtual port
 """
-from __future__ import print_function
+
 import requests
 import argparse
 import json
