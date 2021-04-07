@@ -71,7 +71,7 @@ def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m,
     result = 'GPGGA,%s,%s,%s,%s,%s,%d,%02d,%.1f,%.1f,M,%.1f,M,%s' % (hhmmssss, lat_format, lat_pole_prime, lng_format, lng_pole_prime, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m, dgps_format)
     crc = checksum(result)
 
-    return '$%s*%0.2X' % (result, crc)
+    return '$%s*%0.2X\r\n' % (result, crc)
 
 
 def send_udp(sock, ip, port, message):
