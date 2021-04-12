@@ -154,7 +154,7 @@ def main():
             if sock:
                 send_udp(sock, args.ip, args.port, sentence)
             if ser:
-                ser.write(sentence + "\n")
+                ser.write(sentence)
             if virtualPort:
                 #Add \ to make the simbol $ writable
                 dollar_sentence = '\\' + sentence
