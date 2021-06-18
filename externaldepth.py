@@ -1,7 +1,6 @@
 """
 Push depth to Water Linked Underwater GPS
 """
-from __future__ import print_function
 import requests
 import argparse
 import time

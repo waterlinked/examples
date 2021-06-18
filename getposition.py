@@ -1,7 +1,6 @@
 """
 Get position from Water Linked Underwater GPS
 """
-from __future__ import print_function
 import requests
 import argparse
 import json

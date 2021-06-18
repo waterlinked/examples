@@ -2,7 +2,6 @@
 Read position from Water Linked Underwater GPS convert to NMEA and send to serial
 port, on UDP socket or a virtual port
 """
-from __future__ import print_function
 import requests
 import argparse
 import json
@@ -75,7 +74,7 @@ def gen_gga(time_t, lat, lng, fix_quality, num_sats, hdop, alt_m, geoidal_sep_m,
 
 
 def send_udp(sock, ip, port, message):
-    sock.sendto(message, (ip, port))
+    sock.sendto(message.encode(), (ip, port))
 
 
 class VirtualPort:

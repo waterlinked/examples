@@ -1,7 +1,6 @@
 """
 Read position from Water Linked Underwater GPS convert to use in Olex chart plotter
 """
-from __future__ import print_function
 from nmeaoutput import get_data, checksum, send_udp, get_master_position
 import requests
 import argparse
@@ -91,10 +90,6 @@ class Sender(object):
 
 
 def main():
-    if sys.version_info >= (3, 0):
-        sys.stdout.write("This has only been tested with Python 2.x, not Python 3.x\n")
-        sys.exit(1)
-
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--url', help='IP/URL of Underwater GPS kit. Typically http://192.168.2.94', type=str, default='http://demo.waterlinked.com')
     parser.add_argument("-v", "--verbose", help="Print NMEA sentences", action="store_true")
