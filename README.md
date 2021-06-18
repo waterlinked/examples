@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* Python 2.7 (http://python.org)
+* Python 3 (http://python.org)
 * pip (https://pip.pypa.io/en/stable/installing/)
 
 ## Installation
