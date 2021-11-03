@@ -4,14 +4,9 @@ Create tracklog from Water Linked Underwater GPS
 import requests
 import argparse
 import time
-import logging
 import datetime
 import gpxpy
 import gpxpy.gpx
-
-log = logging.getLogger()
-logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
-
 
 def get_data(url):
     try:
@@ -29,81 +24,114 @@ def get_data(url):
 def get_acoustic_position(base_url):
     return get_data("{}/api/v1/position/acoustic/filtered".format(base_url))
 
-
 def get_global_position(base_url):
     return get_data("{}/api/v1/position/global".format(base_url))
 
 def get_master_position(base_url):
     return get_data("{}/api/v1/position/master".format(base_url))
 
+def _elevation(base_url):
+    acoustic_position = get_acoustic_position(base_url)
+    if not acoustic_position:
+        return None
+
+    depth = acoustic_position["z"]
+    return -depth
+
+def create_master_tracklog(gpx, base_url):
+    gpx_track = gpxpy.gpx.GPXTrack()
+    gpx.tracks.append(gpx_track)
+
+    gpx_segment = gpxpy.gpx.GPXTrackSegment()
+    gpx_track.segments.append(gpx_segment)
+
+    while True:
+        position = get_master_position(base_url)
+        if not position:
+            log.warning("No master position")
+            continue
+        latitude = position["lat"]
+        longitude = position["lon"]
+
+        print("Master: Latitude: {} Longitude: {}".format(latitude, longitude))
+        gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(
+            latitude,
+            longitude,
+            time=datetime.datetime.utcnow()))
+
+        time.sleep(1)
+
+def create_locator_tracklog(gpx, base_url):
+    gpx_track = gpxpy.gpx.GPXTrack()
+    gpx.tracks.append(gpx_track)
+
+    gpx_segment = gpxpy.gpx.GPXTrackSegment()
+    gpx_track.segments.append(gpx_segment)
+
+    while True:
+        global_position = get_global_position(base_url)
+        if not global_position:
+            print("No global position")
+            continue
+
+        latitude = global_position["lat"]
+        longitude = global_position["lon"]
+        elevation = _elevation(base_url)
+
+        print("Global: Latitude: {} Longitude: {} Elevation: {}".format(
+            latitude,
+            longitude,
+            elevation))
+        gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(
+            latitude,
+            longitude,
+            elevation=elevation,
+            time=datetime.datetime.utcnow()))
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-u', '--url', help='Base URL to use', type=str, default='http://demo.waterlinked.com')
-    parser.add_argument('-o', '--output', help='Output filename', type=str, default='tracklog.gpx')
+    parser = argparse.ArgumentParser(description = (
+            "Output global locator GPS track or master GPS track. Default: " +
+            "global locator GPS track"))
+    parser.add_argument(
+        "-u",
+        "--url",
+        help="URL of UGPS master unit",
+        type=str,
+        default="https://demo.waterlinked.com")
+    parser.add_argument(
+        "-o",
+        "--output",
+        help="File path to use for tracklog output",
+        type=str,
+        default="tracklog.gpx")
+    parser.add_argument(
+        "-m",
+        "--master",
+        action = "store_true",
+        help="Output master GPS track instead of locator GPS track")
 
     args = parser.parse_args()
 
     base_url = args.url
-    filename = args.output
-    log.info("Creating tracklog from: {} into file {}. Press Ctrl-C to stop logging".format(base_url, filename))
+    output_filepath = args.output
+
+    print(
+        "Creating tracklog for UGPS system at {}. " +
+        "Press Ctrl-C to stop logging".format(base_url, output_filepath))
 
     gpx = gpxpy.gpx.GPX()
-
-    # Create track
-    gpx_track = gpxpy.gpx.GPXTrack()
-    gpx.tracks.append(gpx_track)
-
-    # Create segment
-    gpx_segment_master = gpxpy.gpx.GPXTrackSegment()
-    gpx_segment_global = gpxpy.gpx.GPXTrackSegment()
-
-    gpx_track.segments.append(gpx_segment_master)
-    gpx_track.segments.append(gpx_segment_global)
-
-    # Open file for writing so we don't get an access denied error
-    # after a full log session is completed
-    f = open(filename, "w")
-
     try:
-        while True:
-            pos_global = get_global_position(base_url)
-            if not pos_global:
-                log.warning("Got no global position")
-                continue
-
-            lat_global = pos_global["lat"]
-            lon_global = pos_global["lon"]
-
-            pos_master = get_master_position(base_url)
-            if not pos_master:
-                log.warning("Got no master position")
-                continue
-
-            lat_master = pos_master["lat"]
-            lon_master = pos_master["lon"]
-
-            acoustic = get_acoustic_position(base_url)
-            if not acoustic:
-                log.warning("Got no acoustic position")
-                continue
-
-            depth = acoustic["z"]
-            altitude = -depth
-
-            log.info("Global: Lat: {} Lon: {} Alt: {}".format(lat_global, lon_global, altitude))
-            gpx_segment_global.points.append(gpxpy.gpx.GPXTrackPoint(lat_global, lon_global, elevation=-altitude, time=datetime.datetime.utcnow()))
-
-            log.info("Master: Lat: {} Lon: {}".format(lat_master, lon_master))
-            gpx_segment_master.points.append(gpxpy.gpx.GPXTrackPoint(lat_master, lon_master, time=datetime.datetime.utcnow()))
-
-            time.sleep(1)
-
+        if args.master:
+            create_master_tracklog(gpx, base_url)
+        else:
+            create_locator_tracklog(gpx, base_url)
     except KeyboardInterrupt:
         pass
-    print("Saving data to file: {}".format(filename))
-    f.write(gpx.to_xml())
-    f.close()
+
+    print("Saving data to: {}".format(output_filepath))
+
+    with open(output_filepath, "w") as output_file:
+        output_file.write(gpx.to_xml())
 
 if __name__ == "__main__":
     main()
