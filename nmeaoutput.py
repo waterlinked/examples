@@ -182,7 +182,7 @@ def main():
         if args.verbose:
             print(sentence)
         if sock:
-            send_udp(sock, args.ip, args.port, sentence)
+            send_udp(sock, args.ip, args.port, sentence.encode("utf-8"))
         if ser:
             ser.write(sentence)
         if virtualPort:
